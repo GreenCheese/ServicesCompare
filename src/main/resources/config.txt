@@ -1,0 +1,6 @@
+{
+"comp1":"Path_to_the_first_json.zip",
+"comp2":"Path_to_the_second_json.zip",
+"resultFolder" : "Path_for_results",
+"comparator" : "Path_to_comparator(winmerge for example)"
+}
