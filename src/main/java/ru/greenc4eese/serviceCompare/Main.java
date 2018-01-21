@@ -1,8 +1,9 @@
 package ru.greenc4eese.serviceCompare;
 
+import ru.greenc4eese.serviceCompare.objects.ObjectPrinter;
+
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
 
@@ -10,8 +11,11 @@ public class Main {
 
 	public static void main(String[] args) throws IOException {
 		Main m = new Main();
-		m.run(args[0]);
-
+		if (args.length > 0) {
+			m.run(args[0]);
+		} else {
+			m.run("");
+		}
 	}
 
 	private void run(String config) throws IOException {
@@ -21,22 +25,37 @@ public class Main {
 			file = new File(config);
 		} else {
 			ClassLoader classLoader = getClass().getClassLoader();
-			file = new File(Objects.requireNonNull(classLoader.getResource(config)).getFile());
+			file = new File(Objects.requireNonNull(classLoader.getResource("config.txt")).getFile());
 		}
 
 		Configurator conf = new Configurator(file);
-
-		List<Path> zipPaths = conf.getZipPathes();
+		List<String> zipPaths = conf.getZipPaths();
 		StringBuilder command = new StringBuilder(conf.getComparatorPath());
+		SystemObjectParser objectParser = new SystemObjectParser();
+		ObjectPrinter printer = new ObjectPrinter();
 
-		for (Path path : zipPaths) {
-			String unzippedPath = GZipFile.gunzipSingle(path.toString(), conf.postfix());
-			SystemObjectParser objectParser = new SystemObjectParser(unzippedPath);
-			String resPath = objectParser.operate();
-			command.append(" ").append(resPath);
+		for (String path : zipPaths) {
+
+			//Unzip
+			String unzippedPath = GZipFile.gunzipSingle(path, conf.postfix());
+			File unzippedFile = new File(unzippedPath);
+
+			//Parse
+			objectParser.parse(unzippedFile);
+
+			String fullPath = CommonUtils.concatPaths(conf.getOuterFolder(), unzippedFile.getName());
+
+			//Print //path to unzip -> unzippedName -> path to out folder
+
+			printer.printObjects(fullPath);
+
+			command.append(" ").append(fullPath);
+
+			//remove tmp
 			CommonUtils.removeFile(unzippedPath);
 		}
-		//System.out.println("command : " + command);
+
+		System.out.println("command : " + command);
 		Runtime.getRuntime().exec(String.valueOf(command));
 	}
 }

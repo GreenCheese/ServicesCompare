@@ -10,17 +10,12 @@ import ru.greenc4eese.serviceCompare.objects.ComparePath;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
 public class SystemObjectParser {
-	private final String pathToFile;
-
-	SystemObjectParser(String pathToFiles) {
-		this.pathToFile = pathToFiles;
+	SystemObjectParser() {
 	}
 
 	private Object getJson(String value) {
@@ -60,34 +55,16 @@ public class SystemObjectParser {
 		return null;
 	}
 
-	private File parse() {
-		System.out.println("parsing file : " + pathToFile);
-
-		File file = new File(pathToFile);
+	void parse(File file) {
+		System.out.println("parsing file : " + file.getAbsolutePath());
 		CompareManager cm = CompareManager.getInstance();
+		cm.reset();
+
 		Map<String, Map> object = getJsonObject(file);
+
 		Predicate<Map.Entry<String, Map>> p = e -> ComparePath.TYPES.contains(e.getValue().get("type")) || CompareObject.TYPES.contains(e.getValue().get("type"));
 		object.entrySet().stream().filter(p).forEach(cm::addItem);
 
 		System.out.println("parsing file successful");
-
-		return file;
-	}
-
-	public String operate() {
-		File file = parse();
-
-		try {
-			//TODO
-			Path p = Paths.get(file.getCanonicalPath());
-			String filename = p.getFileName().toString();
-			Configurator.setOuterPath(filename);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		CompareManager cm = CompareManager.getInstance();
-		cm.printObjects();
-		return Configurator.getOuterPath();
 	}
 }

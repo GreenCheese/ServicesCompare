@@ -1,10 +1,8 @@
 package ru.greenc4eese.serviceCompare.objects;
 
-import ru.greenc4eese.serviceCompare.CommonUtils;
-
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -27,17 +25,13 @@ public class CompareObject extends CommonCompareObject {
 		this.props = props;
 	}
 
-	@Override
-	public void createObject() throws IOException {
+	@Override public Map<String, String> getData() {
+		Map<String, String> data = new HashMap<>();
 		if (props != null) {
-			String data;
 			for (String s : OUTPUT) {
-				data = String.valueOf(props.get(s));
-				if (data != null) {
-					String pathFileName = getStringPath(s);
-					CommonUtils.createFile(pathFileName, data);
-				}
+				data.put(s, String.valueOf(props.get(s)));
 			}
 		}
+		return data;
 	}
 }

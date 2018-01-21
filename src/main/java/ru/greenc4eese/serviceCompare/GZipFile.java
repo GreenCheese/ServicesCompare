@@ -10,9 +10,9 @@ import java.util.zip.GZIPInputStream;
 public class GZipFile {
 	private static final int BUFFER_SIZE = 4096;
 
-	public static List<String> gunzipMany(List<String> zipPathes, String postFix) {
+	public static List<String> gunzipMany(List<String> zipPaths, String postFix) {
 		List<String> unzippedPaths = new ArrayList<>();
-		for (String path : zipPathes) {
+		for (String path : zipPaths) {
 			String unzippedFile = path + postFix;
 			try {
 				GZipFile.gunzipIt(path, unzippedFile);
@@ -26,12 +26,7 @@ public class GZipFile {
 
 	public static String gunzipSingle(String zipPath, String postFix) {
 		String unzippedFile = zipPath + postFix;
-		try {
-			GZipFile.gunzipIt(zipPath, unzippedFile);
-		} catch (Exception e) {
-			System.out.println("Ошибка при попытке разархивирования файла" + zipPath);
-			e.printStackTrace();
-		}
+		GZipFile.gunzipIt(zipPath, unzippedFile);
 		return unzippedFile;
 	}
 
@@ -57,6 +52,7 @@ public class GZipFile {
 			System.out.println("Done unGZip");
 
 		} catch (IOException ex) {
+			System.out.println("Ошибка при попытке разархивирования файла" + inputFile);
 			ex.printStackTrace();
 		}
 	}

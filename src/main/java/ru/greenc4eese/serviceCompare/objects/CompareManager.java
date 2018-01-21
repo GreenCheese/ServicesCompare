@@ -1,12 +1,10 @@
 package ru.greenc4eese.serviceCompare.objects;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class CompareManager {
 	private static final CompareManager instance = new CompareManager();
-
 	private final Map<String, CommonCompareObject> allObjects = new HashMap<>();
 
 	private CompareManager() {
@@ -16,19 +14,8 @@ public class CompareManager {
 		return instance;
 	}
 
-	public void printObjects() {
-		System.out.println("Creating objects");
-		for (CommonCompareObject cco : allObjects.values()) {
-			if (cco instanceof CompareObject) {
-				try {
-					cco.createObject();
-				} catch (IOException e) {
-					System.out.println("Ошибка при формировании файла объекта " + cco.getStringPath());
-					e.printStackTrace();
-				}
-			}
-		}
-		System.out.println("Done!");
+	public Map<String, CommonCompareObject> getAllObjects() {
+		return allObjects;
 	}
 
 	public void addItem(Map.Entry<String, Map> i) {
@@ -82,5 +69,9 @@ public class CompareManager {
 			}
 			allObjects.put(systemKey, co);
 		}
+	}
+
+	public void reset() {
+		allObjects.clear();
 	}
 }

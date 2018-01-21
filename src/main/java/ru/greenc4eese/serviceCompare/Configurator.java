@@ -6,8 +6,6 @@ import org.json.simple.parser.ParseException;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -21,33 +19,19 @@ public class Configurator {
 	private static final String POSTFIX = "-unzip";
 	private static final Set<String> SRC_FILE_KEYS = Collections.unmodifiableSet(new HashSet<>(Arrays.asList("comp1", "comp2")));
 	private static String outerFolder;
-	private static String outerPath;
 
 	private final File configFile;
-	private final List<Path> comparePathes;
+	private final List<String> comparePaths;
 	private String comparatorPath;
 
 	Configurator(File configFile) {
-
 		this.configFile = configFile;
-		comparePathes = new ArrayList<>(2);
+		comparePaths = new ArrayList<>(2);
 		init();
 	}
 
-	public static String getOuterFolder() {
+	public String getOuterFolder() {
 		return outerFolder;
-	}
-
-	public static void setOuterFolder(String outerFolder) {
-		Configurator.outerFolder = outerFolder;
-	}
-
-	public static String getOuterPath() {
-		return outerPath;
-	}
-
-	public static void setOuterPath(String outerPath) {
-		Configurator.outerPath = CommonUtils.concatPaths(outerFolder, outerPath);
 	}
 
 	public String getComparatorPath() {
@@ -74,20 +58,17 @@ public class Configurator {
 		for (String key : SRC_FILE_KEYS) {
 			String path = (String) configMap.get(key);
 			File f = new File(path);
-			try {
-				comparePathes.add(Paths.get(f.getCanonicalPath()));
-			} catch (IOException e) {
-				System.out.println("Incorrect path " + path);
-				System.exit(0);
-			}
+			comparePaths.add(f.getAbsolutePath());
 		}
 
 		if (outerFolder == null) {
-			outerFolder = CommonUtils.concatPaths(comparePathes.get(0).getParent().toString(), "out");
+			File f = new File(comparePaths.get(0));
+			String s = f.getParentFile().getAbsolutePath();
+			outerFolder = CommonUtils.concatPaths(s, "out");
 		}
 	}
 
-	public List<Path> getZipPathes() {
-		return comparePathes;
+	public List<String> getZipPaths() {
+		return comparePaths;
 	}
 }

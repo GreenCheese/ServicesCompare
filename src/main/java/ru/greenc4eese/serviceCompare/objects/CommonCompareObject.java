@@ -1,9 +1,8 @@
 package ru.greenc4eese.serviceCompare.objects;
 
 import ru.greenc4eese.serviceCompare.CommonUtils;
-import ru.greenc4eese.serviceCompare.Configurator;
 
-import java.io.IOException;
+import java.util.Map;
 
 public abstract class CommonCompareObject {
 	private final String name;
@@ -26,21 +25,15 @@ public abstract class CommonCompareObject {
 		this.path = path;
 	}
 
-	private String getParentPathString() {
+	private String getParentPathString(String basePath) {
 		String parentPath;
-		parentPath = path == null ? Configurator.getOuterPath() : path.getStringPath();
+		parentPath = path == null ? basePath : path.getStringPath(basePath);
 		return parentPath;
 	}
 
-	String getStringPath() {
-		return CommonUtils.concatPaths(getParentPathString(), name);
+	String getStringPath(String basePath) {
+		return CommonUtils.concatPaths(getParentPathString(basePath), name);
 	}
 
-	String getStringPath(String objectNamePostfix) {
-		return CommonUtils.concatPaths(getParentPathString(), name + "_" + objectNamePostfix);
-	}
-
-	void createObject() throws IOException {
-		CommonUtils.createDir(getStringPath());
-	}
+	abstract Map getData();
 }
