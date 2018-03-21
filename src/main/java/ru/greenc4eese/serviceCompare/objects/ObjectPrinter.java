@@ -12,7 +12,7 @@ public class ObjectPrinter {
 
 		for (CommonCompareObject cco : allObjects.values()) {
 			if (cco instanceof CompareObject) {
-				String localPath = cco.getStringPath(basePath);
+				String localPath = cco.getStringPath(basePath + "\\" + cco.getType());
 				try {
 					Map<String, String> data = cco.getData();
 					for (String key : data.keySet()) {
