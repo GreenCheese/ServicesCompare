@@ -36,4 +36,6 @@ public abstract class CommonCompareObject {
 	}
 
 	abstract Map getData();
+
+	abstract String getType();
 }

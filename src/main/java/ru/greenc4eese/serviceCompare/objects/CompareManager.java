@@ -27,7 +27,8 @@ public class CompareManager {
 
 		String name = null;
 		if (props != null) {
-			name = String.valueOf(props.get("name"));
+			name = String.valueOf(props.get("name")).trim();
+			name = name.replaceAll("//", "");
 		}
 
 		Map<String, Map> rels = (Map<String, Map>) tmpVal.get("rels");
@@ -60,8 +61,34 @@ public class CompareManager {
 			}
 		}
 
-		if (CompareObject.TYPES.contains(type)) {
-			CompareObject co = new CompareObject(code, props);
+		CompareObject co = null;
+		switch (type) {
+			case LayerObject.TYPE:
+				co = new LayerObject(code, props);
+				break;
+			case ServiceObject.TYPE:
+				co = new ServiceObject(code, props);
+				break;
+			case ScenarioActionObject.TYPE:
+				co = new ScenarioActionObject(code, props);
+				break;
+			case TypePropertyObject.TYPE:
+				if (TypePropertyObject.isValid(code, props)) {
+					String codeName = String.valueOf(props.get("code"));
+					co = new TypePropertyObject(codeName, props);
+				}
+				break;
+			case ReportDataObject.TYPE:
+				co = new ReportDataObject(code, props);
+				break;
+			case TreeDefenitionScriptObject.TYPE:
+				co = new TreeDefenitionScriptObject(code, props);
+				break;
+			default:
+				break;
+		}
+
+		if (co != null) {
 			CommonCompareObject cco = allObjects.get(systemKey);
 
 			if (cco != null) {
