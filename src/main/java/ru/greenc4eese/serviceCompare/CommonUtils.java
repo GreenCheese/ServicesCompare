@@ -38,6 +38,10 @@ public class CommonUtils {
 	}
 
 	public static void createFile(String pathFileName, String postfix, String data) throws IOException {
+		if (data == null || data.equals("null") || data.trim().isEmpty()) {
+			return;
+		}
+
 		createDir(pathFileName);
 		String fullPath;
 		if (postfix != null) {
