@@ -45,8 +45,7 @@ public class Main {
 
 			String fullPath = CommonUtils.concatPaths(conf.getOuterFolder(), unzippedFile.getName());
 
-			//Print //path to unzip -> unzippedName -> path to out folder
-
+			//Print
 			printer.printObjects(fullPath);
 
 			command.append(" ").append(fullPath);
