@@ -7,6 +7,10 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
+//TODO Parse args \n\r
+//TODO add some GUI
+//TODO optional - result only differsn/show log by diference
+//TODO fix - somtimes wrong folder (forexample fifa in cbddmo on test)
 public class Main {
 
 	public static void main(String[] args) throws IOException {
